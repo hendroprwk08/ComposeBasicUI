@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">ComposeBasicUI</string>
+    <string name="description">Basic UI with Compose</string>
     <string name="save">Save</string>
+    <string name="ketik">Type something</string>
+    <string name="cancel">Cancel</string>
+    <string name="warning">Warning</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="dialog_description">This a description for Dialog Box </string>
+    <string name="yes">Yes</string>
 </resources>
