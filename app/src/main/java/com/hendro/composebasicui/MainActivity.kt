@@ -1,6 +1,5 @@
 package com.hendro.composebasicui
 
-import android.graphics.fonts.FontStyle
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -10,11 +9,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -25,13 +22,11 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -70,7 +65,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp() {
-    var context = LocalContext.current
+    val context = LocalContext.current
     var textValue by remember { mutableStateOf("") }
     val openDialog = remember { mutableStateOf(false) }
 
@@ -219,12 +214,13 @@ fun MyApp() {
                                     SnackbarResult.ActionPerformed -> {
                                         /* Handle snackbar action performed */
                                     }
+
                                     SnackbarResult.Dismissed -> {
                                         /* Handle snackbar dismissed */
                                     }
                                 }
                             }
-                    }) {
+                        }) {
                         Text(stringResource(R.string.snack_bar))
                     }
                     Button(modifier = Modifier
