@@ -12,13 +12,25 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
@@ -41,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -61,21 +74,31 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyApp() {
     val context = LocalContext.current
     var textValue by remember { mutableStateOf("") }
-    val openDialog = remember { mutableStateOf(false) }
 
-    //1. snackbar state
+    //1. dialog - state
+    var openDialog by remember { mutableStateOf(false) }
+
+    //1. dropdown - state
+    var mExpanded  by remember { mutableStateOf(false) }
+
+    //2. dropdown - list
+    val mCities  = listOf("Delhi", "Mumbai", "Chennai", "Kolkata", "Hyderabad", "Bengaluru", "Pune")
+
+    // Create a string value to store the selected city
+    var mSelectedText by remember { mutableStateOf("") }
+
+    //1. snackbar - state
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    //dialog dibuat terpisah dari onClick
-    if (openDialog.value) {
-        Dialog(onDismissRequest = { openDialog.value = false }) {
+    //2. dialog - dibuat terpisah dari onClick
+    if (openDialog) {
+        Dialog(onDismissRequest = { openDialog = false }) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -103,7 +126,7 @@ fun MyApp() {
                         horizontalArrangement = Arrangement.Center,
                     ) {
                         OutlinedButton(
-                            onClick = { openDialog.value = false },
+                            onClick = { openDialog = false },
                             modifier = Modifier.padding(8.dp),
                         ) {
                             Text(stringResource(id = R.string.cancel))
@@ -136,9 +159,80 @@ fun MyApp() {
             ), title = {
                 Text(stringResource(id = R.string.app_name))
             }, actions = {
+                IconButton(onClick = { /* do something */ }) {
+                    Icon(
+                        imageVector = Icons.Filled.Search,
+                        contentDescription = stringResource(id = R.string.description)
+                    )
+                }
+                IconButton(onClick = {
+                    //3. dropdown - show
+                    mExpanded = true
+                }) {
+                    Icon(
+                        imageVector = Icons.Filled.MoreVert,
+                        contentDescription = stringResource(id = R.string.description)
+                    )
+                }
+
+                //4. dropdown - objek
+                DropdownMenu(
+                    expanded = mExpanded,
+                    onDismissRequest = { mExpanded = false }
+                ) {
+                    // menu items
+                    DropdownMenuItem(
+                        text = {
+                            Text("Edit")
+                        },
+                        onClick = {
+                            Toast.makeText(context, "Edit", Toast.LENGTH_SHORT).show()
+                            mExpanded = false
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.FavoriteBorder,
+                                contentDescription = null
+                            )
+                        }
+                    )
+
+                    DropdownMenuItem(
+                        text = {
+                            Text("Settings")
+                        },
+                        onClick = {
+                            Toast.makeText(context, "Settings", Toast.LENGTH_SHORT).show()
+                            mExpanded = false
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Settings,
+                                contentDescription = null
+                            )
+                        }
+                    )
+
+                    DropdownMenuItem(
+                        text = {
+                            Text("Send Feedback")
+                        },
+                        onClick = {
+                            Toast.makeText(context, "Send Feedback", Toast.LENGTH_SHORT).show()
+                            mExpanded = false
+                        },
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Email,
+                                contentDescription = null
+                            )
+                        }
+                    )
+                }
 
             })
         },
+
     ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             Column(
@@ -155,7 +249,6 @@ fun MyApp() {
 
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-//                        modifier = Modifier.padding(horizontal = 10.dp),
                     ) {
                         Image(
                             modifier = Modifier
@@ -200,13 +293,14 @@ fun MyApp() {
                         .weight(1f)
                         .wrapContentWidth(Alignment.CenterHorizontally),
                         onClick = {
-                            //3. snackbar opening
-                            //penggunaan string resource menggunakan context
+                            //3. snackbar - opening
                             scope.launch {
                                 val result = snackbarHostState
                                     .showSnackbar(
-                                        message = context.resources.getString(R.string.snack_bar),
+                                        message = context.resources.getString(R.string.snack_bar), //penggunaan string resource menggunakan context
                                         actionLabel = context.resources.getString(R.string.ok),
+                                        withDismissAction = true, //tombol X
+
                                         // Defaults to SnackbarDuration.Short
                                         duration = SnackbarDuration.Indefinite
                                     )
@@ -227,9 +321,7 @@ fun MyApp() {
                         .weight(1f)
                         .wrapContentWidth(Alignment.End),
                         onClick = {
-                            openDialog.value = true
-
-
+                            openDialog = true
                         }) {
                         Text(stringResource(R.string.dialog))
                         Image(
