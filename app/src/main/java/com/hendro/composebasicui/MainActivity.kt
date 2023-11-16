@@ -106,7 +106,7 @@ fun MyApp() {
                 ) {
                     Text(
                         fontSize = 18.sp,
-                        text = stringResource(id = R.string.dialog),
+                        text = stringResource(id = androidx.compose.material3.R.string.dialog),
                         modifier = Modifier.padding(16.dp),
                     )
                     Text(
@@ -331,7 +331,7 @@ fun MyApp() {
                         onClick = {
                             openDialog = true
                         }) {
-                        Text(stringResource(R.string.dialog))
+                        Text(stringResource(androidx.compose.material3.R.string.dialog))
                         Image(
                             modifier = Modifier
                                 .height(16.dp)
