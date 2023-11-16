@@ -1,5 +1,6 @@
 package com.hendro.composebasicui
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -12,13 +13,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Email
@@ -53,7 +52,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -61,6 +59,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContextCompat.startActivity
 import kotlinx.coroutines.launch
 
 //https://www.tutorialkart.com/android-jetpack-compose/
@@ -84,13 +83,7 @@ fun MyApp() {
     var openDialog by remember { mutableStateOf(false) }
 
     //1. dropdown - state
-    var mExpanded  by remember { mutableStateOf(false) }
-
-    //2. dropdown - list
-    val mCities  = listOf("Delhi", "Mumbai", "Chennai", "Kolkata", "Hyderabad", "Bengaluru", "Pune")
-
-    // Create a string value to store the selected city
-    var mSelectedText by remember { mutableStateOf("") }
+    var mExpanded by remember { mutableStateOf(false) }
 
     //1. snackbar - state
     val scope = rememberCoroutineScope()
@@ -166,7 +159,7 @@ fun MyApp() {
                     )
                 }
                 IconButton(onClick = {
-                    //3. dropdown - show
+                    //2. dropdown - show
                     mExpanded = true
                 }) {
                     Icon(
@@ -175,7 +168,7 @@ fun MyApp() {
                     )
                 }
 
-                //4. dropdown - objek
+                //3. dropdown - objek
                 DropdownMenu(
                     expanded = mExpanded,
                     onDismissRequest = { mExpanded = false }
@@ -233,7 +226,7 @@ fun MyApp() {
             })
         },
 
-    ) { innerPadding ->
+        ) { innerPadding ->
         Box(modifier = Modifier.padding(innerPadding)) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -244,7 +237,22 @@ fun MyApp() {
                     onValueChange = { textValue = it },
                     label = { Text(stringResource(id = R.string.ketik)) })
                 OutlinedButton(modifier = Modifier.fillMaxWidth(), onClick = {
-                    Toast.makeText(context, textValue, Toast.LENGTH_SHORT).show()
+                    val bundle = Bundle()
+                    bundle.putString("b_nama", textValue)
+
+//                    if(textValue.equals("")){
+//                        Toast.makeText(context, "Lengkapi data", Toast.LENGTH_SHORT).show()
+//                    }else{
+//                        val intent = Intent(context,KeduaActivity::class.java)
+//                        startActivity(context, intent, bundle)
+//                    }
+
+                    val intent = Intent(context, KeduaActivity::class.java).apply {
+                        putExtra("b_nama", textValue)
+                        // ...
+                    }
+                    startActivity(context, intent, null)
+
                 }) {
 
                     Row(

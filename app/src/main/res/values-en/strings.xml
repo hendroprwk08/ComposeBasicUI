@@ -6,6 +6,7 @@
     <string name="cancel">Cancel</string>
     <string name="warning">Warning</string>
     <string name="confirmed">Confirmed</string>
+    <string name="close">Close</string>
     <string name="dialog_description">This a description for Dialog Box </string>
     <string name="yes">Yes</string>
 </resources>
